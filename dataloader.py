@@ -21,15 +21,16 @@ class CustomDataset(data.Dataset):
         self.root = root
         self.phase = phase
         self.labels = {}
-
-        self.label_path = os.path.join(root, self.phase, self.phase+'_label')
+        
+        self.label_path = os.path.join(root, self.phase, self.phase+'_label_COVID.txt')
         with open(self.label_path, 'r') as f:
             file_list = []
             fake_list = []
             for line in f.readlines()[0:]:
                 v = line.strip().split()
                 file_list.append(v[0])
-                fake_list.append(v[1])                
+                if self.phase != 'test' :
+                    fake_list.append(v[1])                
 
         self.labels['file'] = list(file_list)
         self.labels['fake'] = list(fake_list)
@@ -37,14 +38,20 @@ class CustomDataset(data.Dataset):
     def __getitem__(self, index):
         #if self.phase == 'train':
         image_path = os.path.join(self.root, self.phase, self.labels['file'][index])
-        is_fake = self.labels['fake'][index]
-        is_fake = torch.tensor(int(is_fake))
+        
+        if self.phase != 'test' :
+            is_fake = self.labels['fake'][index]
+            is_fake = torch.tensor(int(is_fake))
 
         transform = get_transform()
         image = Image.open(image_path).convert('RGB')
         image = transform(image)
 
-        return (self.labels['file'][index], image, is_fake)
+        if self.phase != 'test' :
+            return (self.labels['file'][index], image, is_fake)
+        elif self.phase == 'test' :
+            dummy = ""
+            return (self.labels['file'][index], image, dummy)
 
     def __len__(self):
         return len(self.labels['file'])
