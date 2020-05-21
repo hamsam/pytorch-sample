@@ -15,31 +15,32 @@ def evaluate(prediction_labels, gt_labels):
     return acc
 
 
-def read_prediction_pt(file_name):
+def read_prediction_file(file_name):
     with open(file_name) as f:
         lines = f.readlines()
     dictionary = dict([l.replace('\n', '').split(' ') for l in lines])
     return dictionary
 
 
-def read_prediction_gt(file_name):
+def read_test_file(file_name):
     with open(file_name) as f:
         lines = f.readlines()
     dictionary = dict([l.replace('\n', '').split(' ') for l in lines])
     return dictionary
 
 
-def evaluation_metrics(prediction_file, testset_path):
-    prediction_labels = read_prediction_pt(prediction_file)
-    gt_labels = read_prediction_gt(testset_path)
+def evaluation_metrics(prediction_file, test_file):
+    prediction_labels = read_prediction_file(prediction_file)
+    gt_labels = read_test_file(test_file)
 
     return evaluate(prediction_labels, gt_labels)
 
 
 if __name__ == '__main__':
     args = argparse.ArgumentParser()
-    args.add_argument('--prediction', type=str, default='pred.txt')
-    config = args.parse_args()
-    testset_path = '/data/7_icls_face/test/test_label'
+    args.add_argument('--prediction_file', type=str, default='prediction.txt')
+    args.add_argument('--test_file', type=str, default='test_label')
 
-    print(evaluation_metrics(config.prediction, testset_path))
+    config = args.parse_args()
+
+    print(evaluation_metrics(config.prediction_file, config.test_file))

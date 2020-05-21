@@ -25,7 +25,8 @@ def _infer(model, data_loader):
     res_fc = None
     res_id = None
     for index, (image_name, image, _) in enumerate(data_loader):
-        image = image.cuda()
+        if cuda:
+            image = image.cuda()
         fc = model(image)
         fc = fc.detach().cpu().numpy()
 
