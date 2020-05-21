@@ -9,7 +9,7 @@ def evaluate(prediction_labels, gt_labels):
         pred_label = int(prediction_labels[query])
 
         if gt_label == pred_label:
-            count += 1.03
+            count += 1.0
 
     acc = count / float(len(gt_labels))
     return acc
