@@ -142,6 +142,15 @@ if __name__ == '__main__':
         time_ = datetime.datetime.now()
         num_batches = len(train_dataloader)
 
+        
+        #check parameter of model
+        print("------------------------------------------------------------")
+        total_params = sum(p.numel() for p in model.parameters())
+        print("num of parameter : ",total_params)
+        trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        print("num of trainable_ parameter :",trainable_params)
+        print("------------------------------------------------------------")
+        
         # train
         for epoch in range(num_epochs):
             model.train()
