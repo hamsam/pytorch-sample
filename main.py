@@ -21,7 +21,7 @@ except:
     DATASET_PATH = os.path.join('./data')
 
 
-def _infer(model, data_loader):
+def _infer(model, cuda, data_loader):
     res_fc = None
     res_id = None
     for index, (image_name, image, _) in enumerate(data_loader):
@@ -58,16 +58,16 @@ def feed_infer(output_file, infer_func):
         raise AssertionError('output result of inference is nothing')
 
 
-def validate(prediction_file, model, validate_dataloader, validate_label_file):
-    feed_infer(prediction_file, lambda : _infer(model, data_loader=validate_dataloader))
+def validate(prediction_file, model, validate_dataloader, validate_label_file, cuda):
+    feed_infer(prediction_file, lambda : _infer(model, cuda, data_loader=validate_dataloader))
 
     metric_result = evaluation_metrics(prediction_file, validate_label_file)
     print('Eval result: {:.4f}'.format(metric_result))
     return metric_result
 
 
-def test(prediction_file_name, model, test_dataloader):
-    feed_infer(prediction_file, lambda : _infer(model, data_loader=test_dataloader))
+def test(prediction_file_name, model, test_dataloader, cuda):
+    feed_infer(prediction_file, lambda : _infer(model, cuda, data_loader=test_dataloader))
 
 
 def save_model(model_name, model, optimizer, scheduler):
@@ -184,7 +184,7 @@ if __name__ == '__main__':
             save_model(str(epoch + 1), model, optimizer, scheduler)
 
             # validate
-            validate(prediction_file, model, validate_dataloader, validate_label_file)
+            validate(prediction_file, model, validate_dataloader, validate_label_file, cuda)
 
             time_ = datetime.datetime.now()
             elapsed = datetime.datetime.now() - time_
@@ -194,6 +194,6 @@ if __name__ == '__main__':
         model.eval()
         # get data loader
         test_dataloader, _ = data_loader(root=DATASET_PATH, phase='test', batch_size=batch)
-        test(prediction_file, model, test_dataloader)
+        test(prediction_file, model, test_dataloader,cuda )
         # submit test result
         
