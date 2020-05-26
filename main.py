@@ -66,7 +66,7 @@ def validate(prediction_file, model, validate_dataloader, validate_label_file, c
     return metric_result
 
 
-def test(prediction_file_name, model, test_dataloader, cuda):
+def test(prediction_file, model, test_dataloader, cuda):
     feed_infer(prediction_file, lambda : _infer(model, cuda, data_loader=test_dataloader))
 
 
