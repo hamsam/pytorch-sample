@@ -94,7 +94,7 @@ if __name__ == '__main__':
     # mode argument
     args = argparse.ArgumentParser()
     args.add_argument("--num_classes", type=int, default=2)
-    args.add_argument("--lr", type=int, default=0.001)
+    args.add_argument("--lr", type=float, default=0.001)
     args.add_argument("--cuda", type=bool, default=True)
     args.add_argument("--num_epochs", type=int, default=100)
     args.add_argument("--print_iter", type=int, default=10)
